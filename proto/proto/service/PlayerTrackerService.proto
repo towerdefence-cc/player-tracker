@@ -1,0 +1,47 @@
+syntax = "proto3";
+package service;
+
+option java_package = "cc.towerdefence.api.service";
+
+import "google/protobuf/empty.proto";
+
+service PlayerTracker {
+  rpc UpdatePlayerServer(UpdatePlayerServerRequest) returns (google.protobuf.Empty) {}
+  rpc GetPlayerServer(GetPlayerServerRequest) returns (GetPlayerServerResponse) {}
+  rpc GetPlayerServers(GetPlayerServersRequest) returns (GetPlayerServersResponse) {}
+  rpc GetServerPlayerCount(ServerIdRequest) returns (GetServerPlayerCountResponse) {}
+  rpc GetServerPlayers(ServerIdRequest) returns (GetServerPlayersResponse) {}
+}
+
+message UpdatePlayerServerRequest {
+  string player_id = 1;
+  string server_id = 2;
+}
+
+message GetPlayerServerRequest {
+  string player_id = 1;
+}
+
+message GetPlayerServerResponse {
+  string server_id = 1;
+}
+
+message GetPlayerServersResponse {
+  repeated string server_ids = 1;
+}
+
+message GetPlayerServersRequest {
+  repeated string player_ids = 1;
+}
+
+message ServerIdRequest {
+  string server_id = 1;
+}
+
+message GetServerPlayerCountResponse {
+  int32 player_count = 1;
+}
+
+message GetServerPlayersResponse {
+  repeated string player_ids = 1;
+}
