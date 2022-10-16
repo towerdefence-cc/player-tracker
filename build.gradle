@@ -1,12 +1,14 @@
 plugins {
-    id 'org.springframework.boot' version '2.7.4'
-    id 'io.spring.dependency-management' version '1.0.14.RELEASE'
-    id 'java'
+    id("java")
+    id("org.springframework.boot") version "2.7.4"
+    id("io.spring.dependency-management") version "1.0.14.RELEASE"
+
+    id("io.freefair.lombok") version "6.5.1"
 }
 
-group = 'cc.towerdefence.api'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+group = "cc.towerdefence.api"
+version = "0.0.1-SNAPSHOT"
+sourceCompatibility = "17"
 
 configurations {
     compileOnly {
@@ -19,14 +21,24 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-    compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation("net.devh:grpc-server-spring-boot-starter:2.13.1.RELEASE") {
+        exclude group: "io.grpc", module: "grpc-netty-shaded" // causes version conflicts, provided by the proto SDK
+    }
+
+    implementation project(":proto")
+
+    implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
+
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
-tasks.named('test') {
+bootBuildImage {
+    imageName = "towerdefence-cc/player-tracker:dev"
+}
+
+tasks.named("test") {
     useJUnitPlatform()
 }

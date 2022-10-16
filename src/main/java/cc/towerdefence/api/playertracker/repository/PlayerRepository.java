@@ -1,2 +1,11 @@
-package cc.towerdefence.api.playertracker.repository;public class PlayerRepository {
+package cc.towerdefence.api.playertracker.repository;
+
+import cc.towerdefence.api.playertracker.model.OnlinePlayer;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.UUID;
+
+@Repository
+public interface PlayerRepository extends MongoRepository<OnlinePlayer, UUID> {
 }

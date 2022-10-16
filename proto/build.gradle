@@ -21,6 +21,8 @@ dependencies {
     protobuf("com.google.protobuf:protobuf-java:3.21.7")
     api("com.google.protobuf:protobuf-java:3.21.7")
     api("org.apache.tomcat:annotations-api:6.0.53")
+
+    api("io.grpc:grpc-netty:${grpcVersion}")
     api("io.grpc:grpc-stub:${grpcVersion}")
     api("io.grpc:grpc-protobuf:${grpcVersion}")
 }
