@@ -38,12 +38,13 @@ dependencies {
 }
 
 bootBuildImage {
-    imageName = "towerdefence-cc/player-tracker:dev"
+    imageName = "towerdefence.cc/player-tracker:dev"
 
     docker {
         publishRegistry {
             url = "https://ghcr.io"
-            token = System.getenv("REGISTRY_TOKEN")
+            username = System.getenv("REGISTRY_USERNAME")
+            password = System.getenv("REGISTRY_PASSWORD")
         }
     }
 }

@@ -8,7 +8,8 @@ env:
   CONTAINER_REGISTRY: ghcr.io
   CONTAINER_IMAGE_NAME: ${{ github.repository }}
   CONTAINER_IMAGE_VERSION: ${{ github.sha }}
-  REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  REGISTRY_USERNAME: ${{ github.actor }}
+  REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   publish:
@@ -26,5 +27,5 @@ jobs:
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
         with:
           arguments: "bootBuildImage
-            --imageName=towerdefence.cc/${{ github.repository }}:${{ github.sha }}
+            --imageName=ghcr.io/towerdefence-cc/${{ github.repository }}:${{ github.sha }}
             --publishImage"
