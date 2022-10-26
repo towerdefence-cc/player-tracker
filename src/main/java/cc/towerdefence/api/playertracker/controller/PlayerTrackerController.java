@@ -1,18 +1,8 @@
 package cc.towerdefence.api.playertracker.controller;
 
 import cc.towerdefence.api.playertracker.service.PlayerTrackerService;
-import cc.towerdefence.api.service.GetPlayerServerRequest;
-import cc.towerdefence.api.service.GetPlayerServerResponse;
-import cc.towerdefence.api.service.GetPlayerServersRequest;
-import cc.towerdefence.api.service.GetPlayerServersResponse;
-import cc.towerdefence.api.service.GetServerPlayerCountResponse;
-import cc.towerdefence.api.service.GetServerPlayersResponse;
-import cc.towerdefence.api.service.OnlinePlayer;
-import cc.towerdefence.api.service.OnlineServer;
-import cc.towerdefence.api.service.PlayerDisconnectRequest;
-import cc.towerdefence.api.service.PlayerLoginRequest;
 import cc.towerdefence.api.service.PlayerTrackerGrpc;
-import cc.towerdefence.api.service.ServerIdRequest;
+import cc.towerdefence.api.service.PlayerTrackerProto;
 import com.google.protobuf.Empty;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
@@ -33,30 +23,30 @@ public class PlayerTrackerController extends PlayerTrackerGrpc.PlayerTrackerImpl
     private final PlayerTrackerService playerTrackerService;
 
     @Override
-    public void proxyPlayerLogin(PlayerLoginRequest request, StreamObserver<Empty> responseObserver) {
+    public void proxyPlayerLogin(PlayerTrackerProto.PlayerLoginRequest request, StreamObserver<Empty> responseObserver) {
         this.playerTrackerService.proxyPlayerLogin(request);
         responseObserver.onNext(Empty.getDefaultInstance());
         responseObserver.onCompleted();
     }
 
     @Override
-    public void serverPlayerLogin(PlayerLoginRequest request, StreamObserver<Empty> responseObserver) {
+    public void serverPlayerLogin(PlayerTrackerProto.PlayerLoginRequest request, StreamObserver<Empty> responseObserver) {
         this.playerTrackerService.serverPlayerLogin(request);
         responseObserver.onNext(Empty.getDefaultInstance());
         responseObserver.onCompleted();
     }
 
     @Override
-    public void proxyPlayerDisconnect(PlayerDisconnectRequest request, StreamObserver<Empty> responseObserver) {
+    public void proxyPlayerDisconnect(PlayerTrackerProto.PlayerDisconnectRequest request, StreamObserver<Empty> responseObserver) {
         this.playerTrackerService.proxyPlayerDisconnect(request);
         responseObserver.onNext(Empty.getDefaultInstance());
         responseObserver.onCompleted();
     }
 
     @Override
-    public void getPlayerServer(GetPlayerServerRequest request, StreamObserver<GetPlayerServerResponse> responseObserver) {
-        OnlineServer server = this.playerTrackerService.getPlayerServer(request);
-        GetPlayerServerResponse.Builder response = GetPlayerServerResponse.newBuilder();
+    public void getPlayerServer(PlayerTrackerProto.GetPlayerServerRequest request, StreamObserver<PlayerTrackerProto.GetPlayerServerResponse> responseObserver) {
+        PlayerTrackerProto.OnlineServer server = this.playerTrackerService.getPlayerServer(request);
+        PlayerTrackerProto.GetPlayerServerResponse.Builder response = PlayerTrackerProto.GetPlayerServerResponse.newBuilder();
 
         if (server != null)
             response.setServer(server);
@@ -66,24 +56,24 @@ public class PlayerTrackerController extends PlayerTrackerGrpc.PlayerTrackerImpl
     }
 
     @Override
-    public void getPlayerServers(GetPlayerServersRequest request, StreamObserver<GetPlayerServersResponse> responseObserver) {
-        responseObserver.onNext(GetPlayerServersResponse.newBuilder().putAllPlayerServers(this.playerTrackerService.getPlayerServers(request)).build());
+    public void getPlayerServers(PlayerTrackerProto.GetPlayerServersRequest request, StreamObserver<PlayerTrackerProto.GetPlayerServersResponse> responseObserver) {
+        responseObserver.onNext(PlayerTrackerProto.GetPlayerServersResponse.newBuilder().putAllPlayerServers(this.playerTrackerService.getPlayerServers(request)).build());
         responseObserver.onCompleted();
     }
 
     @Override
-    public void getServerPlayerCount(ServerIdRequest request, StreamObserver<GetServerPlayerCountResponse> responseObserver) {
-        responseObserver.onNext(GetServerPlayerCountResponse.newBuilder().setPlayerCount(this.playerTrackerService.getServerPlayerCount(request)).build());
+    public void getServerPlayerCount(PlayerTrackerProto.ServerIdRequest request, StreamObserver<PlayerTrackerProto.GetServerPlayerCountResponse> responseObserver) {
+        responseObserver.onNext(PlayerTrackerProto.GetServerPlayerCountResponse.newBuilder().setPlayerCount(this.playerTrackerService.getServerPlayerCount(request)).build());
         responseObserver.onCompleted();
     }
 
     @Override
-    public void getServerPlayers(ServerIdRequest request, StreamObserver<GetServerPlayersResponse> responseObserver) {
-        List<OnlinePlayer> onlinePlayers = this.playerTrackerService.getServerPlayers(request).stream()
-                .map(onlinePlayer -> OnlinePlayer.newBuilder().setPlayerId(onlinePlayer.getId().toString()).setUsername(onlinePlayer.getUsername()).build())
+    public void getServerPlayers(PlayerTrackerProto.ServerIdRequest request, StreamObserver<PlayerTrackerProto.GetServerPlayersResponse> responseObserver) {
+        List<PlayerTrackerProto.OnlinePlayer> onlinePlayers = this.playerTrackerService.getServerPlayers(request).stream()
+                .map(onlinePlayer -> PlayerTrackerProto.OnlinePlayer.newBuilder().setPlayerId(onlinePlayer.getId().toString()).setUsername(onlinePlayer.getUsername()).build())
                 .toList();
 
-        responseObserver.onNext(GetServerPlayersResponse.newBuilder().addAllOnlinePlayers(onlinePlayers).build());
+        responseObserver.onNext(PlayerTrackerProto.GetServerPlayersResponse.newBuilder().addAllOnlinePlayers(onlinePlayers).build());
         responseObserver.onCompleted();
     }
 }
