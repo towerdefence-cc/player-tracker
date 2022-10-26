@@ -18,6 +18,8 @@ configurations {
 
 repositories {
     mavenCentral()
+    mavenLocal()
+    maven { url = "https://repo.towerdefence.cc/snapshots" }
 }
 
 dependencies {
@@ -25,7 +27,7 @@ dependencies {
         exclude group: "io.grpc", module: "grpc-netty-shaded" // causes version conflicts, provided by the proto SDK
     }
 
-    implementation project(":proto")
+    implementation("cc.towerdefence.api:grpc-sdk:22f2328")
 
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 
@@ -37,6 +39,13 @@ dependencies {
 
 bootBuildImage {
     imageName = "towerdefence-cc/player-tracker:dev"
+
+    docker {
+        publishRegistry {
+            url = "https://ghcr.io"
+            token = System.getenv("REGISTRY_TOKEN")
+        }
+    }
 }
 
 tasks.named("test") {
