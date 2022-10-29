@@ -57,7 +57,9 @@ public class PlayerTrackerController extends PlayerTrackerGrpc.PlayerTrackerImpl
 
     @Override
     public void getPlayerServers(PlayerTrackerProto.GetPlayerServersRequest request, StreamObserver<PlayerTrackerProto.GetPlayerServersResponse> responseObserver) {
-        responseObserver.onNext(PlayerTrackerProto.GetPlayerServersResponse.newBuilder().putAllPlayerServers(this.playerTrackerService.getPlayerServers(request)).build());
+        responseObserver.onNext(PlayerTrackerProto.GetPlayerServersResponse.newBuilder()
+                .putAllPlayerServers(this.playerTrackerService.getPlayerServers(request))
+                .build());
         responseObserver.onCompleted();
     }
 

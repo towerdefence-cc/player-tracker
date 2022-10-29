@@ -52,7 +52,6 @@ public class PlayerTrackerService {
         UUID playerId = UUID.fromString(request.getPlayerId());
         Optional<OnlinePlayer> optionalPlayer = this.playerRepository.findById(playerId);
 
-
         return optionalPlayer.map(player -> PlayerTrackerProto.OnlineServer.newBuilder()
                         .setServerId(player.getServerId())
                         .setProxyId(player.getProxyId())
@@ -61,8 +60,7 @@ public class PlayerTrackerService {
     }
 
     public Map<String, PlayerTrackerProto.OnlineServer> getPlayerServers(PlayerTrackerProto.GetPlayerServersRequest request) {
-        Query query = Query.query(Criteria.where("_id").in(request.getPlayerIdsList()));
-        List<OnlinePlayer> onlinePlayers = this.playerRepositoryTemplate.find(query, OnlinePlayer.class);
+        Iterable<OnlinePlayer> onlinePlayers = this.playerRepository.findAllById(request.getPlayerIdsList().stream().map(UUID::fromString).toList());
 
         Map<String, PlayerTrackerProto.OnlineServer> playerServers = new HashMap<>();
         for (OnlinePlayer onlinePlayer : onlinePlayers) {
@@ -76,11 +74,10 @@ public class PlayerTrackerService {
     }
 
     public int getServerPlayerCount(PlayerTrackerProto.ServerIdRequest request) {
-        return (int) this.playerRepositoryTemplate.count(Query.query(Criteria.where("serverId").is(request.getServerId())), OnlinePlayer.class);
+        return this.playerRepository.countAllByServerId(request.getServerId());
     }
 
     public List<OnlinePlayer> getServerPlayers(PlayerTrackerProto.ServerIdRequest request) {
-        Query query = Query.query(Criteria.where("serverId").is(request.getServerId()));
-        return this.playerRepositoryTemplate.find(query, OnlinePlayer.class);
+        return this.playerRepository.findAllByServerId(request.getServerId());
     }
 }
