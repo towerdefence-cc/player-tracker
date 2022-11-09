@@ -1,5 +1,6 @@
 package cc.towerdefence.api.playertracker.controller;
 
+import cc.towerdefence.api.model.common.PlayerProto;
 import cc.towerdefence.api.playertracker.service.PlayerTrackerService;
 import cc.towerdefence.api.service.PlayerTrackerGrpc;
 import cc.towerdefence.api.service.PlayerTrackerProto;
@@ -44,7 +45,7 @@ public class PlayerTrackerController extends PlayerTrackerGrpc.PlayerTrackerImpl
     }
 
     @Override
-    public void getPlayerServer(PlayerTrackerProto.GetPlayerServerRequest request, StreamObserver<PlayerTrackerProto.GetPlayerServerResponse> responseObserver) {
+    public void getPlayerServer(PlayerProto.PlayerRequest request, StreamObserver<PlayerTrackerProto.GetPlayerServerResponse> responseObserver) {
         PlayerTrackerProto.OnlineServer server = this.playerTrackerService.getPlayerServer(request);
         PlayerTrackerProto.GetPlayerServerResponse.Builder response = PlayerTrackerProto.GetPlayerServerResponse.newBuilder();
 
@@ -56,7 +57,7 @@ public class PlayerTrackerController extends PlayerTrackerGrpc.PlayerTrackerImpl
     }
 
     @Override
-    public void getPlayerServers(PlayerTrackerProto.GetPlayerServersRequest request, StreamObserver<PlayerTrackerProto.GetPlayerServersResponse> responseObserver) {
+    public void getPlayerServers(PlayerProto.PlayersRequest request, StreamObserver<PlayerTrackerProto.GetPlayerServersResponse> responseObserver) {
         responseObserver.onNext(PlayerTrackerProto.GetPlayerServersResponse.newBuilder()
                 .putAllPlayerServers(this.playerTrackerService.getPlayerServers(request))
                 .build());

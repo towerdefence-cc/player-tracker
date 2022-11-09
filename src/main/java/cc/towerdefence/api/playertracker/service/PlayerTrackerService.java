@@ -1,5 +1,6 @@
 package cc.towerdefence.api.playertracker.service;
 
+import cc.towerdefence.api.model.common.PlayerProto;
 import cc.towerdefence.api.playertracker.model.OnlinePlayer;
 import cc.towerdefence.api.playertracker.repository.PlayerRepository;
 import cc.towerdefence.api.service.PlayerTrackerProto;
@@ -48,7 +49,7 @@ public class PlayerTrackerService {
         this.playerRepository.deleteById(UUID.fromString(request.getPlayerId()));
     }
 
-    public PlayerTrackerProto.OnlineServer getPlayerServer(PlayerTrackerProto.GetPlayerServerRequest request) {
+    public PlayerTrackerProto.OnlineServer getPlayerServer(PlayerProto.PlayerRequest request) {
         UUID playerId = UUID.fromString(request.getPlayerId());
         Optional<OnlinePlayer> optionalPlayer = this.playerRepository.findById(playerId);
 
@@ -59,7 +60,7 @@ public class PlayerTrackerService {
                 .orElse(null);
     }
 
-    public Map<String, PlayerTrackerProto.OnlineServer> getPlayerServers(PlayerTrackerProto.GetPlayerServersRequest request) {
+    public Map<String, PlayerTrackerProto.OnlineServer> getPlayerServers(PlayerProto.PlayersRequest request) {
         Iterable<OnlinePlayer> onlinePlayers = this.playerRepository.findAllById(request.getPlayerIdsList().stream().map(UUID::fromString).toList());
 
         Map<String, PlayerTrackerProto.OnlineServer> playerServers = new HashMap<>();
