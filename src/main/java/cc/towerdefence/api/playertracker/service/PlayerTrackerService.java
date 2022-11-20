@@ -21,6 +21,7 @@ import java.util.UUID;
 public class PlayerTrackerService {
     private final PlayerRepository playerRepository;
     private final MongoTemplate playerRepositoryTemplate;
+    private final PlayerCountService playerCountService;
 
     public void proxyPlayerLogin(PlayerTrackerProto.PlayerLoginRequest request) {
         Query existsQuery = new Query(Criteria.where("_id").is(UUID.fromString(request.getPlayerId())));
@@ -73,11 +74,15 @@ public class PlayerTrackerService {
         return playerServers;
     }
 
+    public List<OnlinePlayer> getServerPlayers(PlayerTrackerProto.ServerIdRequest request) {
+        return this.playerRepository.findAllByServerId(request.getServerId());
+    }
+
     public int getServerPlayerCount(PlayerTrackerProto.ServerIdRequest request) {
         return this.playerRepository.countAllByServerId(request.getServerId());
     }
 
-    public List<OnlinePlayer> getServerPlayers(PlayerTrackerProto.ServerIdRequest request) {
-        return this.playerRepository.findAllByServerId(request.getServerId());
+    public int getServerTypePlayerCount(PlayerTrackerProto.ServerTypeRequest request) {
+        return this.playerCountService.getPlayerCount(request.getServerType());
     }
 }

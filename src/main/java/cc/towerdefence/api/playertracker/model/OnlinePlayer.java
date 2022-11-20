@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.UUID;
@@ -18,8 +19,10 @@ public class OnlinePlayer {
 
     private String username;
 
+    @TextIndexed
     private String serverId;
 
+    @TextIndexed
     private String proxyId;
 
     public OnlinePlayer(UUID id, String username, String proxyId) {

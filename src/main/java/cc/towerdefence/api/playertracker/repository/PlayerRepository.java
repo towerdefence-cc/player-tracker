@@ -14,5 +14,7 @@ public interface PlayerRepository extends MongoRepository<OnlinePlayer, UUID> {
 
     int countAllByServerId(String serverId);
 
+    int countAllByServerIdStartingWith(String serverId);
+
     List<OnlinePlayer> findAllByProxyId(String proxyId);
 }

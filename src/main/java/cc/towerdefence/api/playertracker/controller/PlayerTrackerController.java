@@ -64,18 +64,26 @@ public class PlayerTrackerController extends PlayerTrackerGrpc.PlayerTrackerImpl
     }
 
     @Override
-    public void getServerPlayerCount(PlayerTrackerProto.ServerIdRequest request, StreamObserver<PlayerTrackerProto.GetServerPlayerCountResponse> responseObserver) {
-        responseObserver.onNext(PlayerTrackerProto.GetServerPlayerCountResponse.newBuilder().setPlayerCount(this.playerTrackerService.getServerPlayerCount(request)).build());
-        responseObserver.onCompleted();
-    }
-
-    @Override
     public void getServerPlayers(PlayerTrackerProto.ServerIdRequest request, StreamObserver<PlayerTrackerProto.GetServerPlayersResponse> responseObserver) {
         List<PlayerTrackerProto.OnlinePlayer> onlinePlayers = this.playerTrackerService.getServerPlayers(request).stream()
                 .map(onlinePlayer -> PlayerTrackerProto.OnlinePlayer.newBuilder().setPlayerId(onlinePlayer.getId().toString()).setUsername(onlinePlayer.getUsername()).build())
                 .toList();
 
         responseObserver.onNext(PlayerTrackerProto.GetServerPlayersResponse.newBuilder().addAllOnlinePlayers(onlinePlayers).build());
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void getServerPlayerCount(PlayerTrackerProto.ServerIdRequest request, StreamObserver<PlayerTrackerProto.GetServerPlayerCountResponse> responseObserver) {
+        responseObserver.onNext(PlayerTrackerProto.GetServerPlayerCountResponse.newBuilder().setPlayerCount(this.playerTrackerService.getServerPlayerCount(request)).build());
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void getServerTypePlayerCount(PlayerTrackerProto.ServerTypeRequest request, StreamObserver<PlayerTrackerProto.GetServerTypePlayerCountResponse> responseObserver) {
+        responseObserver.onNext(PlayerTrackerProto.GetServerTypePlayerCountResponse.newBuilder()
+                .setPlayerCount(this.playerTrackerService.getServerTypePlayerCount(request))
+                .build());
         responseObserver.onCompleted();
     }
 }
